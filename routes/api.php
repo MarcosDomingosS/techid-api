@@ -1,4 +1,6 @@
 <?php
+
+use App\Http\Controllers\SedController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -10,8 +12,6 @@ Route::prefix('v1')->group(function () {
             'status' => 'success',
         ]);
     });
+
+    Route::apiResource('seds', SedController::class);
 });
-
-
-
-?>

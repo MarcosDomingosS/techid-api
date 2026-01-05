@@ -11,13 +11,35 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::create('seds', function(Blueprint $table){
+            $table->id();
+            $table->string('code', 10);
+            $table->string('name', 60);
+        });
+
+        Schema::create('permissions', function(Blueprint $table){
+            $table->id();
+            $table->string('name');
+            $table->text('description');
+        });
+        Schema::create('roles', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->integer('order');
+            $table->foreignId('sed_id')->references('id')->on('seds')->onDelete('cascade');
+        });
+        Schema::create('permission_roles', function(Blueprint $table){
+            $table->id();
+            $table->foreignId('permission_id')->references('id')->on('permissions')->onDelete('cascade');
+            $table->foreignId('role_id')->references('id')->on('roles')->onDelete('cascade');
+        });
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
+            $table->foreignId('role_id')->references('id')->on('roles')->onDelete('cascade');
             $table->timestamps();
         });
 
@@ -42,8 +64,12 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('seds');
+        Schema::dropIfExists('roles');
         Schema::dropIfExists('users');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
+        Schema::dropIfExists('permissions');
+        Schema::dropIfExists('role_permissions');
     }
 };
