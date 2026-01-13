@@ -4,10 +4,12 @@ namespace App\Services;
 
 use App\Models\Sed;
 use Illuminate\Support\Facades\DB;
+use App\Repositories\SedRepository;
 
 class SedService {
     public function list(){
-        return Sed::all();
+        $repository = new SedRepository();
+        return $repository->all();
     }
 
     public function create(array $data){
